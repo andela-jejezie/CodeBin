@@ -1,0 +1,62 @@
+div(ng-init="testing()")
+  md-toolbar
+    .md-toolbar-tools
+      span.md-flex(ng-bind="authUser.name") 
+  md-content.md-padding
+
+    h3 Please fill the empty field or edit filled fields
+    p    
+      img(height="100" ng-src="{{authUser.picture}}")
+    div(layout="row")
+      div(flex)
+        md-text-float(label="First Name" ng-model="authUser.firstName")
+      div(flex)
+        md-text-float(label="Email" ng-model="authUser.email")
+      div(flex)
+        md-text-float(label="Last Name" ng-model="authUser.lastName")
+    p
+      md-text-float(label="Kode Name" ng-model="authUser.kodename")
+    p
+      md-text-float(label="Skill Tree Rank" ng-model="authUser.skillTreelevel")
+    p Select Area of Expertise
+    div(layout="row")
+      div(flex ng-repeat="expertise in expertArea" class="expertArea" id="{{expertise}}")
+        label(label="{{ expertise }}" flex) {{ expertise }}
+          md-checkbox(aria-label="Checkbox" ng-model="bool" ng-change="sync(bool, expertise)" ng-checked="isChecked(expertise)" )
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  md-content.md-controls.md-padding
+      md-button(ng-click="update()") Update
+      md-button(ng-click="logout()" ng-if="authUser") Logout
+
+
+
+
+ //- <md-checkbox md-no-ink aria-label="Checkbox No Ink" ng-model="data.cb5" class="md-accent">
+ //-    Checkbox (md-accent): No Ink
+ //-  </md-checkbox>
