@@ -6,7 +6,9 @@ window.MyApp = angular.module("MyApp", [
   'myapp.directives',
   'ngAnimate',
   'ngMaterial',
-  'ui.router'
+  'ngSanitize',
+  'ui.router',
+  'hc.marked'
    ]);
 
 MyApp.run(['$rootScope','Refs','$timeout','Authentication', 'Authorization', '$state', function($rootScope, Refs, $timeout, Authentication, Authorization, $state) {
@@ -22,6 +24,9 @@ MyApp.run(['$rootScope','Refs','$timeout','Authentication', 'Authorization', '$s
         if(!snap.val()) {
           user.created = Firebase.ServerValue.TIMESTAMP;
           userRef.set(user);
+          $timeout(function() {
+            $state.go('user/Settings');
+          });
           //analytics.track('Signup');
         }
         else{
@@ -30,7 +35,6 @@ MyApp.run(['$rootScope','Refs','$timeout','Authentication', 'Authorization', '$s
 
         $timeout(function(){
           $rootScope.authUser = user;
-          $state.go('user/settings');
         });
       });
 
@@ -69,6 +73,14 @@ MyApp.config(['$stateProvider', '$urlRouterProvider','$locationProvider', functi
       url: '/user/settings',
       templateUrl: 'views/settings.html',
       controller: 'Settings',
+      data: {
+        access: 'private'
+      }
+    })
+    .state('newpost', {
+      url: '/newpost',
+      templateUrl: 'views/newpost.html',
+      controller: 'NewPost',
       data: {
         access: 'private'
       }

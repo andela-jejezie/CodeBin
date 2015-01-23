@@ -1,0 +1,8 @@
+div(layout="row")
+	md-input-container(flex)
+		label Dump your kode here
+			textarea(ng-model="inputText" id="inputText" class="long" auto-grow)
+div(id="outputText" marked="markdown" ng-bind-html="markdown")
+marked #Markdown directive *It works!* 
+marked [new](http://www.google.com)
+

@@ -4,6 +4,9 @@ angular.module("myapp.services", ['firebase','ngCookies']);
 
 
 require("./directives/header.js");
+require("./directives/autoGrow.js");
+
+
 
 require("./services/authentication.js");
 require("./services/authorization.js");
@@ -15,6 +18,8 @@ require("./services/utils.js");
 
 require("./controllers/home.js");
 require("./controllers/settings.js");
+require("./controllers/newpost.js");
+
 
 
 

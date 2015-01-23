@@ -71,6 +71,7 @@
     "uglify-js": "^2.4.15",
     "unzip": "^0.1.11",
     "vinyl-source-stream": "^1.0.0",
-    "watchify": "^1.0.6"
+    "watchify": "^1.0.6",
+    "marked": "~0.3.2"
   }
 }

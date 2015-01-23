@@ -1,5 +1,8 @@
 /* Color constants */
 /* Other constants */
+.long {
+  width: 50%;
+}
 body {
   font-family: 'Helvetica Neue', Helvetica, Arial, sans;
   font-size: 12pt;

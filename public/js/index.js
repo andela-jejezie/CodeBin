@@ -7,7 +7,9 @@ window.MyApp = angular.module("MyApp", [
   'myapp.directives',
   'ngAnimate',
   'ngMaterial',
-  'ui.router'
+  'ngSanitize',
+  'ui.router',
+  'hc.marked'
    ]);
 
 MyApp.run(['$rootScope','Refs','$timeout','Authentication', 'Authorization', '$state', function($rootScope, Refs, $timeout, Authentication, Authorization, $state) {
@@ -23,6 +25,9 @@ MyApp.run(['$rootScope','Refs','$timeout','Authentication', 'Authorization', '$s
         if(!snap.val()) {
           user.created = Firebase.ServerValue.TIMESTAMP;
           userRef.set(user);
+          $timeout(function() {
+            $state.go('user/Settings');
+          });
           //analytics.track('Signup');
         }
         else{
@@ -31,7 +36,6 @@ MyApp.run(['$rootScope','Refs','$timeout','Authentication', 'Authorization', '$s
 
         $timeout(function(){
           $rootScope.authUser = user;
-          $state.go('user/settings');
         });
       });
 
@@ -73,6 +77,14 @@ MyApp.config(['$stateProvider', '$urlRouterProvider','$locationProvider', functi
       data: {
         access: 'private'
       }
+    })
+    .state('newpost', {
+      url: '/newpost',
+      templateUrl: 'views/newpost.html',
+      controller: 'NewPost',
+      data: {
+        access: 'private'
+      }
     });
 }]);
 
@@ -93,6 +105,9 @@ angular.module("myapp.services", ['firebase','ngCookies']);
 
 
 require("./directives/header.js");
+require("./directives/autoGrow.js");
+
+
 
 require("./services/authentication.js");
 require("./services/authorization.js");
@@ -104,12 +119,14 @@ require("./services/utils.js");
 
 require("./controllers/home.js");
 require("./controllers/settings.js");
+require("./controllers/newpost.js");
 
 
 
 
 
-},{"./controllers/home.js":3,"./controllers/settings.js":4,"./directives/header.js":5,"./services/authentication.js":6,"./services/authorization.js":7,"./services/home.js":10,"./services/refs.js":11,"./services/settings.js":12,"./services/utils.js":13}],3:[function(require,module,exports){
+
+},{"./controllers/home.js":3,"./controllers/newpost.js":4,"./controllers/settings.js":5,"./directives/autoGrow.js":6,"./directives/header.js":7,"./services/authentication.js":8,"./services/authorization.js":9,"./services/home.js":12,"./services/refs.js":13,"./services/settings.js":14,"./services/utils.js":15}],3:[function(require,module,exports){
 angular.module("myapp.controllers")
 .controller('Home',['$scope','$mdSidenav','$location','$state',
   function($scope,$mdSidenav,$location,$state){
@@ -117,6 +134,21 @@ angular.module("myapp.controllers")
 
 }]);
 },{}],4:[function(require,module,exports){
+angular.module("myapp.controllers")
+.controller('NewPost',['$rootScope','$scope','$state','Utils', 'Settings', function($rootScope, $scope, $state, Utils, Settings) {
+
+  Utils.toast('Dump a Kode hear');
+
+  $scope.inputText = '';
+ 
+  $scope.$watch('inputText', function(current, original) {
+      $scope.markdown = current;
+  });
+
+
+}]);
+
+},{}],5:[function(require,module,exports){
 angular.module("myapp.controllers")
 .controller('Settings',['$rootScope','$scope','$state','Utils', 'Settings', function($rootScope, $scope, $state, Utils, Settings) {
 
@@ -170,7 +202,21 @@ angular.module("myapp.controllers")
 
 }]);
 
-},{}],5:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
+angular.module('myapp.services')
+.directive("autoGrow", function(){
+    return function(scope, element, attr){
+        var update = function(){
+            element.css("height", "auto");
+            element.css("height", element[0].scrollHeight + "px");
+        };
+        scope.$watch(attr.ngModel, function(){
+            update();
+        });
+        attr.$set("ngTrim", "false");
+    };
+});
+},{}],7:[function(require,module,exports){
 angular.module("myapp.directives")
   .directive('header', function() {
     return {
@@ -189,7 +235,7 @@ angular.module("myapp.directives")
     };
   });
 
-},{}],6:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 angular.module('myapp.services')
 .factory('Authentication',['$rootScope','$firebase', 'Refs', '$state', function($rootScope, $firebase, Refs, $state){
 
@@ -223,7 +269,7 @@ angular.module('myapp.services')
     }
   };
 }]);
-},{}],7:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 angular.module('myapp.services')
 .factory('Authorization',['$rootScope','Utils','$state', function($rootScope, Utils, $state){
 
@@ -242,7 +288,7 @@ angular.module('myapp.services')
     };
   }
 ]);
-},{}],8:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 module.exports = function(rootRef, $rootScope, $firebase){
   return {
     create:function(stuff){
@@ -254,7 +300,7 @@ module.exports = function(rootRef, $rootScope, $firebase){
     }
   }
 };
-},{}],9:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 var firebaseRef  = require('../../../../firebase-ref');
 module.exports = function($cookies){
   var cookieRootRef = $cookies && $cookies.rootRef?$cookies.rootRef:null;
@@ -265,19 +311,19 @@ module.exports = function($cookies){
     expertise: rootRef.child('expertise')
   };
 };
-},{"../../../../firebase-ref":14}],10:[function(require,module,exports){
+},{"../../../../firebase-ref":16}],12:[function(require,module,exports){
 angular.module("myapp.services")
 .factory('Home',['Refs','$rootScope','$firebase',function(Refs, $rootScope,$firebase) {
 	return require('./exports/home')(Refs.root, $rootScope, $firebase);
 }]);
 
-},{"./exports/home":8}],11:[function(require,module,exports){
+},{"./exports/home":10}],13:[function(require,module,exports){
 angular.module("myapp.services")
 .factory('Refs',['$cookies',function($cookies){
   return require('./exports/refs')($cookies);
 }]);
 
-},{"./exports/refs":9}],12:[function(require,module,exports){
+},{"./exports/refs":11}],14:[function(require,module,exports){
 angular.module('myapp.services')
 .factory('Settings',['$rootScope','Utils', 'Refs', function($rootScope, Utils, Refs){
     
@@ -302,7 +348,7 @@ angular.module('myapp.services')
       } 
     };
 }]);
-},{}],13:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 angular.module('myapp.services')
 .factory('Utils',['$rootScope', '$mdToast', function($rootScope, $mdToast) {
 
@@ -321,7 +367,7 @@ angular.module('myapp.services')
   };
 
 }]);
-},{}],14:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 module.exports = {
   dev: 'https://codebin.firebaseio.com/',
   prod: 'https://codebin.firebaseio.com/'
