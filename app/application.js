@@ -84,6 +84,14 @@ MyApp.config(['$stateProvider', '$urlRouterProvider','$locationProvider', functi
       data: {
         access: 'private'
       }
+    })
+    .state('user/profile', {
+      url: '/user/profile',
+      controller: 'Profile',
+      templateUrl: 'views/profile.html',
+      data: {
+        access: 'private'
+      }
     });
 }]);
 

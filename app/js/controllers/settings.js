@@ -8,7 +8,6 @@ angular.module("myapp.controllers")
   $scope.testing = function(){
     Settings.expertise(function(details){
       $scope.expertArea = details;
-      Utils.toast(details);
     });
   };
 
@@ -44,7 +43,7 @@ angular.module("myapp.controllers")
       }
       else if(!err) {
         Utils.toast('Successfully updated user settings');
-        $state.go('default');
+        $state.go('user/profile');
       }
     });
  };

@@ -19,6 +19,7 @@ require("./services/utils.js");
 require("./controllers/home.js");
 require("./controllers/settings.js");
 require("./controllers/newpost.js");
+require("./controllers/profile.js");
 
 
 

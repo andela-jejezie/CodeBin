@@ -85,6 +85,14 @@ MyApp.config(['$stateProvider', '$urlRouterProvider','$locationProvider', functi
       data: {
         access: 'private'
       }
+    })
+    .state('user/profile', {
+      url: '/user/profile',
+      controller: 'Profile',
+      templateUrl: 'views/profile.html',
+      data: {
+        access: 'private'
+      }
     });
 }]);
 
@@ -120,13 +128,14 @@ require("./services/utils.js");
 require("./controllers/home.js");
 require("./controllers/settings.js");
 require("./controllers/newpost.js");
+require("./controllers/profile.js");
 
 
 
 
 
 
-},{"./controllers/home.js":3,"./controllers/newpost.js":4,"./controllers/settings.js":5,"./directives/autoGrow.js":6,"./directives/header.js":7,"./services/authentication.js":8,"./services/authorization.js":9,"./services/home.js":12,"./services/refs.js":13,"./services/settings.js":14,"./services/utils.js":15}],3:[function(require,module,exports){
+},{"./controllers/home.js":3,"./controllers/newpost.js":4,"./controllers/profile.js":5,"./controllers/settings.js":6,"./directives/autoGrow.js":7,"./directives/header.js":8,"./services/authentication.js":9,"./services/authorization.js":10,"./services/home.js":13,"./services/refs.js":14,"./services/settings.js":15,"./services/utils.js":16}],3:[function(require,module,exports){
 angular.module("myapp.controllers")
 .controller('Home',['$scope','$mdSidenav','$location','$state',
   function($scope,$mdSidenav,$location,$state){
@@ -150,6 +159,18 @@ angular.module("myapp.controllers")
 
 },{}],5:[function(require,module,exports){
 angular.module("myapp.controllers")
+.controller('Profile',['$rootScope','$scope','$state','Utils', 'Settings', function($rootScope, $scope, $state, Utils, Settings) {
+
+    $scope.testing = function(){
+    Settings.expertise(function(details){
+      $scope.expertArea = details;
+    });
+  };
+
+}]);
+
+},{}],6:[function(require,module,exports){
+angular.module("myapp.controllers")
 .controller('Settings',['$rootScope','$scope','$state','Utils', 'Settings', function($rootScope, $scope, $state, Utils, Settings) {
 
   Utils.toast('Welcome ' + $rootScope.authUser.firstName);
@@ -159,7 +180,6 @@ angular.module("myapp.controllers")
   $scope.testing = function(){
     Settings.expertise(function(details){
       $scope.expertArea = details;
-      Utils.toast(details);
     });
   };
 
@@ -195,14 +215,14 @@ angular.module("myapp.controllers")
       }
       else if(!err) {
         Utils.toast('Successfully updated user settings');
-        $state.go('default');
+        $state.go('user/profile');
       }
     });
  };
 
 }]);
 
-},{}],6:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 angular.module('myapp.services')
 .directive("autoGrow", function(){
     return function(scope, element, attr){
@@ -216,7 +236,7 @@ angular.module('myapp.services')
         attr.$set("ngTrim", "false");
     };
 });
-},{}],7:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 angular.module("myapp.directives")
   .directive('header', function() {
     return {
@@ -235,7 +255,7 @@ angular.module("myapp.directives")
     };
   });
 
-},{}],8:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 angular.module('myapp.services')
 .factory('Authentication',['$rootScope','$firebase', 'Refs', '$state', function($rootScope, $firebase, Refs, $state){
 
@@ -269,7 +289,7 @@ angular.module('myapp.services')
     }
   };
 }]);
-},{}],9:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 angular.module('myapp.services')
 .factory('Authorization',['$rootScope','Utils','$state', function($rootScope, Utils, $state){
 
@@ -288,7 +308,7 @@ angular.module('myapp.services')
     };
   }
 ]);
-},{}],10:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 module.exports = function(rootRef, $rootScope, $firebase){
   return {
     create:function(stuff){
@@ -300,7 +320,7 @@ module.exports = function(rootRef, $rootScope, $firebase){
     }
   }
 };
-},{}],11:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 var firebaseRef  = require('../../../../firebase-ref');
 module.exports = function($cookies){
   var cookieRootRef = $cookies && $cookies.rootRef?$cookies.rootRef:null;
@@ -311,19 +331,19 @@ module.exports = function($cookies){
     expertise: rootRef.child('expertise')
   };
 };
-},{"../../../../firebase-ref":16}],12:[function(require,module,exports){
+},{"../../../../firebase-ref":17}],13:[function(require,module,exports){
 angular.module("myapp.services")
 .factory('Home',['Refs','$rootScope','$firebase',function(Refs, $rootScope,$firebase) {
 	return require('./exports/home')(Refs.root, $rootScope, $firebase);
 }]);
 
-},{"./exports/home":10}],13:[function(require,module,exports){
+},{"./exports/home":11}],14:[function(require,module,exports){
 angular.module("myapp.services")
 .factory('Refs',['$cookies',function($cookies){
   return require('./exports/refs')($cookies);
 }]);
 
-},{"./exports/refs":11}],14:[function(require,module,exports){
+},{"./exports/refs":12}],15:[function(require,module,exports){
 angular.module('myapp.services')
 .factory('Settings',['$rootScope','Utils', 'Refs', function($rootScope, Utils, Refs){
     
@@ -348,7 +368,7 @@ angular.module('myapp.services')
       } 
     };
 }]);
-},{}],15:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 angular.module('myapp.services')
 .factory('Utils',['$rootScope', '$mdToast', function($rootScope, $mdToast) {
 
@@ -367,7 +387,7 @@ angular.module('myapp.services')
   };
 
 }]);
-},{}],16:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 module.exports = {
   dev: 'https://codebin.firebaseio.com/',
   prod: 'https://codebin.firebaseio.com/'
